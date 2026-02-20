@@ -2,106 +2,141 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Employee Login</title>
+<title>Advanced Employee Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 body {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+  background: linear-gradient(-45deg, #667eea, #764ba2, #6dd5ed, #2193b0);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
 }
 
-.login-box {
-  background: white;
-  padding: 40px 30px;
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+.login-container {
+  position: relative;
+  width: 350px;
+  padding: 40px;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  text-align: center;
-  animation: fadeIn 1s ease;
-  width: 320px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  color: #fff;
+  animation: slideUp 1s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .brand {
+  text-align: center;
   font-size: 26px;
   font-weight: bold;
-  color: #4facfe;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   letter-spacing: 2px;
-  text-transform: uppercase;
-  animation: glow 2s infinite alternate;
 }
 
-.login-box h2 {
-  margin-bottom: 15px;
-  color: #333;
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
 }
 
-.login-box input {
+.input-group input {
   width: 100%;
-  margin: 10px 0;
   padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255,255,255,0.6);
+  color: white;
   font-size: 15px;
-  transition: 0.3s;
-}
-
-.login-box input:focus {
-  border-color: #4facfe;
-  box-shadow: 0 0 8px rgba(79,172,254,0.5);
   outline: none;
 }
 
-.captcha-box {
-  margin: 10px 0;
-  font-weight: bold;
-  color: #444;
-}
-
-.login-box button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #4facfe, #00c6ff);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+.input-group label {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
   transition: 0.3s;
 }
 
-.login-box button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0,198,255,0.4);
+.input-group input:focus ~ label,
+.input-group input:valid ~ label {
+  top: -10px;
+  font-size: 12px;
+  color: #fff;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+.captcha-box {
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 5px #4facfe, 0 0 10px #00f2fe; }
-  to { text-shadow: 0 0 20px #4facfe, 0 0 30px #00f2fe; }
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+@media(max-width:400px){
+  .login-container {
+    width: 90%;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="login-box">
+<div class="login-container">
   <div class="brand">Attendance System 💻</div>
-  <h2>Login</h2>
 
-  <input type="text" id="username" placeholder="Username" required>
-  <input type="password" id="password" placeholder="Password" required>
+  <div class="input-group">
+    <input type="text" id="username" required>
+    <label>Username</label>
+  </div>
+
+  <div class="input-group">
+    <input type="password" id="password" required>
+    <label>Password</label>
+  </div>
 
   <div class="captcha-box" id="captchaQuestion"></div>
-  <input type="text" id="captchaAnswer" placeholder="Enter CAPTCHA Answer" required>
+
+  <div class="input-group">
+    <input type="text" id="captchaAnswer" required>
+    <label>Enter CAPTCHA</label>
+  </div>
 
   <button onclick="login()">Login</button>
 </div>
@@ -126,17 +161,16 @@ function login() {
   const captcha = document.getElementById("captchaAnswer").value;
 
   if (parseInt(captcha) !== (num1 + num2)) {
-    alert("❌ Wrong CAPTCHA!");
+    alert("Wrong CAPTCHA!");
     generateCaptcha();
     return;
   }
 
   if (user === "Hazrait" && pass === "it@9733") {
-    localStorage.setItem("loggedIn", "true");
-    alert("✅ Login Successful!");
+    alert("Login Successful!");
     window.location.href = "attendance.html";
   } else {
-    alert("❌ Invalid Username or Password!");
+    alert("Invalid Username or Password!");
     generateCaptcha();
   }
 }
